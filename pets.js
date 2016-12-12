@@ -22,10 +22,12 @@ if (command === 'read') {
 
     if (index && dataArray[index]) {
       console.log(dataArray[index]);
-    } else if (index) {
+    }
+    else if (index) {
       console.error(`Usage: ${node} ${file} ${command} INDEX`);
       process.exit(1);
-    } else {
+    }
+    else {
       console.log(dataArray);
     }
   });
@@ -59,7 +61,8 @@ else if (command === 'create') {
         console.log(newPet);
       });
     });
-  } else {
+  }
+  else {
     console.error(`Usage: ${node} ${file} ${command} AGE KIND NAME`);
     process.exit(1);
   }
@@ -90,16 +93,17 @@ else if (command === 'update') {
 
         fs.writeFile(dataPath, dataJSON, (writeError) => {
           if (writeError) {
-            throw write
+            throw writeError;
           }
 
           console.log(updatedPet);
-        })
-      } else {
+        });
+      }
+      else {
         console.error(`Usage: ${node} ${file} ${command} INDEX AGE KIND NAME`);
         process.exit(1);
       }
-    })
+    });
   }
   else {
     console.error(`Usage: ${node} ${file} ${command} INDEX AGE KIND NAME`);
@@ -127,7 +131,7 @@ else if (command === 'destroy') {
         }
 
         console.log(...destroyedPet);
-      })
+      });
     }
     else {
       console.error(`Usage: ${node} ${file} ${command} INDEX`);
