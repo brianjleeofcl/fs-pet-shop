@@ -1,6 +1,6 @@
 module.exports = {
   extends: [
-    'ryansobol/node',
-    'ryansobol/es6'
+    'ryansobol/es6',
+    'ryansobol/node'
   ]
 };
