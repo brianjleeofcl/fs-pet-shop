@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const app = express();
 
@@ -5,6 +7,8 @@ const fs = require('fs');
 const path = require('path');
 
 const dataPath = path.join(__dirname, 'pets.json');
+
+app.disable('x-powered-by');
 
 app.get('/pets', (req, res) => {
   fs.readFile(dataPath, 'utf8', (err, json) => {
@@ -19,6 +23,24 @@ app.get('/pets', (req, res) => {
   });
 });
 
+app.get('/pets/:id', (req, res) => {
+  fs.readFile(dataPath, 'utf8', (err, json) => {
+    if (err) {
+      console.error(err.stack);
+      return res.sendStatus(500);
+    }
+
+    const dataArray = JSON.parse(json);
+    const index = req.params.id;
+
+    if (dataArray[index]) {
+      res.send(dataArray[index]);
+    }
+    else {
+      res.sendStatus(404);
+    }
+  });
+});
 
 app.use((req, res) => {
   res.sendStatus(404);
@@ -30,4 +52,4 @@ app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
 
-module.exports = ;
+module.exports = app;
