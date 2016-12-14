@@ -8,7 +8,11 @@ const path = require('path');
 
 const dataPath = path.join(__dirname, 'pets.json');
 
+const bodyParser = require('body-parser');
+
 app.disable('x-powered-by');
+
+app.use(bodyParser.json());
 
 app.get('/pets', (req, res) => {
   fs.readFile(dataPath, 'utf8', (err, json) => {
@@ -20,6 +24,36 @@ app.get('/pets', (req, res) => {
     const data = JSON.parse(json);
 
     res.send(data);
+  });
+});
+
+app.post('/pets', (req, res) => {
+  fs.readFile(dataPath, 'utf8', (readErr, json) => {
+    if (readErr) {
+      console.error(readErr.stack);
+      return res.sendStatus(500);
+    }
+    console.log('post check');
+    const dataArray = JSON.parse(json);
+    const name = req.body.name;
+    const age = req.body.age;
+    const kind = req.body.kind;
+
+    if (name && age && kind) {
+      dataArray.push({name, age, kind});
+
+      fs.writeFile(dataPath, JSON.stringify(dataArray), (writeErr) => {
+        if (writeErr) {
+          console.error(writeErr.stack);
+          return res.sendStatus(500);
+        }
+
+        res.send({name, age, kind});
+      });
+    }
+    else {
+      res.sendStatus(400);
+    }
   });
 });
 
