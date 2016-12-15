@@ -3,14 +3,25 @@
 const express = require('express');
 const app = express();
 
+
 const fs = require('fs');
 const path = require('path');
 
 const dataPath = path.join(__dirname, 'pets.json');
+const pwPath = path.join(__dirname, 'user.htpasswd');
+
+const auth = require('http-auth');
+const basic = auth.basic({
+  realm: 'Required',
+  file: pwPath,
+  msg401: 'Unauthorized'
+});
 
 const bodyParser = require('body-parser');
 
 app.disable('x-powered-by');
+
+app.use(auth.connect(basic));
 
 app.use(bodyParser.json());
 
