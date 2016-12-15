@@ -14,11 +14,10 @@ app.disable('x-powered-by');
 
 app.use(bodyParser.json());
 
-app.get('/pets', (req, res) => {
+app.get('/pets', (req, res, next) => {
   fs.readFile(dataPath, 'utf8', (err, json) => {
     if (err) {
-      console.error(err.stack);
-      return res.sendStatus(500);
+      return next(new Error(err));
     }
 
     const data = JSON.parse(json);
@@ -27,28 +26,26 @@ app.get('/pets', (req, res) => {
   });
 });
 
-app.post('/pets', (req, res) => {
+app.post('/pets', (req, res, next) => {
   fs.readFile(dataPath, 'utf8', (readErr, json) => {
     if (readErr) {
-      console.error(readErr.stack);
-      return res.sendStatus(500);
+      return next(new Error(readErr));
     }
-    console.log('post check');
+
     const dataArray = JSON.parse(json);
     const name = req.body.name;
     const age = req.body.age;
     const kind = req.body.kind;
 
     if (name && age && kind) {
-      dataArray.push({name, age, kind});
+      dataArray.push({ name, age, kind });
 
       fs.writeFile(dataPath, JSON.stringify(dataArray), (writeErr) => {
         if (writeErr) {
-          console.error(writeErr.stack);
-          return res.sendStatus(500);
+          return next(new Error(writeErr));
         }
 
-        res.send({name, age, kind});
+        res.send({ name, age, kind });
       });
     }
     else {
@@ -57,11 +54,10 @@ app.post('/pets', (req, res) => {
   });
 });
 
-app.get('/pets/:id', (req, res) => {
+app.get('/pets/:id', (req, res, next) => {
   fs.readFile(dataPath, 'utf8', (err, json) => {
     if (err) {
-      console.error(err.stack);
-      return res.sendStatus(500);
+      return next(new Error(err));
     }
 
     const dataArray = JSON.parse(json);
@@ -71,13 +67,19 @@ app.get('/pets/:id', (req, res) => {
       res.send(dataArray[index]);
     }
     else {
-      res.sendStatus(404);
+      next();
     }
   });
 });
 
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+
+  return res.sendStatus(500);
+});
+
 app.use((req, res) => {
-  res.sendStatus(404);
+  return res.sendStatus(404);
 });
 
 const port = process.env.PORT || 8000;
