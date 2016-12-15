@@ -70,6 +70,72 @@ app.get('/pets/:id', (req, res, next) => {
   });
 });
 
+app.patch('/pets/:id', (req, res, next) => {
+  fs.readFile(dataPath, 'utf8', (readErr, json) => {
+    if (readErr) {
+      next(readErr);
+    }
+
+    const dataArray = JSON.parse(json);
+    const index = req.params.id;
+
+    if (dataArray[index]) {
+      const { name, age, kind } = req.body;
+
+      if (name || age || kind) {
+        const pet = {};
+        pet.name = name || dataArray[index].name;
+        pet.age = age || dataArray[index].age;
+        pet.kind = kind || dataArray[index].kind;
+
+        dataArray[index] = pet;
+        const newJSON = JSON.stringify(dataArray);
+
+        fs.writeFile(dataPath, newJSON, (writeErr) => {
+          if (writeErr) {
+            next(writeErr);
+          }
+
+          res.send(pet);
+        });
+      }
+      else {
+        res.sendStatus(400);
+      }
+    }
+    else {
+      next();
+    }
+  });
+});
+
+app.delete('/pets/:id', (req, res, next) => {
+  fs.readFile(dataPath, 'utf8', (readErr, json) => {
+    if (readErr) {
+      next(readErr);
+    }
+
+    const dataArray = JSON.parse(json);
+    const index = req.params.id;
+
+    if (dataArray[index]) {
+      const pet = dataArray.splice(index, 1)[0];
+      const newJSON = JSON.stringify(dataArray);
+
+      fs.writeFile(dataPath, newJSON, (writeErr) => {
+        if (writeErr) {
+          next(writeErr);
+        }
+
+        res.send(pet);
+      });
+    }
+    else {
+      next();
+    }
+  });
+});
+
 app.use((err, req, res, _next) => {
   console.error(err.stack);
 
