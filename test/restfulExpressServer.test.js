@@ -123,7 +123,7 @@ describe('pets restfulExpressServer', () => {
     });
   });
 
-  describe('PUT method', () => {
+  describe('PATCH method', () => {
     it('should update pets.json when given a valid pet object', (done) => {
       request(app)
         .patch('/pets/1')
