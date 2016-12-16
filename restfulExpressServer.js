@@ -47,14 +47,15 @@ app.post('/pets', (req, res, next) => {
     const { name, age, kind } = req.body;
 
     if (name && age && kind) {
-      dataArray.push({ name, age, kind });
+      const newPet = { name, age: parseInt(age), kind }
+      dataArray.push(newPet);
 
       fs.writeFile(dataPath, JSON.stringify(dataArray), (writeErr) => {
         if (writeErr) {
           return next(writeErr);
         }
 
-        res.send({ name, age, kind });
+        res.send(newPet);
       });
     }
     else {
@@ -96,7 +97,7 @@ app.patch('/pets/:id', (req, res, next) => {
       if (name || age || kind) {
         const pet = {};
         pet.name = name || dataArray[index].name;
-        pet.age = age || dataArray[index].age;
+        pet.age = parseInt(age || dataArray[index].age);
         pet.kind = kind || dataArray[index].kind;
 
         dataArray[index] = pet;
