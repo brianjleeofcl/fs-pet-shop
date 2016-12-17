@@ -3,8 +3,6 @@
 const express = require('express');
 const app = express();
 
-
-const fs = require('fs');
 const path = require('path');
 
 const dataPath = path.join(__dirname, 'pets.json');
@@ -27,7 +25,7 @@ app.use(auth.connect(basic));
 
 app.use(bodyParser.json());
 
-app.use(pets(dataPath))
+app.use(pets(dataPath));
 
 app.use((err, req, res, _next) => {
   console.error(err.stack);

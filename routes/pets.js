@@ -1,4 +1,6 @@
-const newRouter = function (dataPath) {
+'use strict';
+
+const newRouter = function(dataPath) {
   const fs = require('fs');
 
   const express = require('express');
@@ -26,7 +28,8 @@ const newRouter = function (dataPath) {
       const { name, age, kind } = req.body;
 
       if (name && age && kind) {
-        const newPet = { name, age: parseInt(age), kind }
+        const newPet = { name, age: parseInt(age), kind };
+
         dataArray.push(newPet);
 
         fs.writeFile(dataPath, JSON.stringify(dataArray), (writeErr) => {
@@ -75,6 +78,7 @@ const newRouter = function (dataPath) {
 
         if (name || age || kind) {
           const pet = {};
+
           pet.name = name || dataArray[index].name;
           pet.age = parseInt(age || dataArray[index].age);
           pet.kind = kind || dataArray[index].kind;
@@ -127,7 +131,7 @@ const newRouter = function (dataPath) {
     });
   });
 
-  return router
+  return router;
 };
 
 module.exports = newRouter;
