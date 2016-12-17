@@ -19,134 +19,15 @@ const basic = auth.basic({
 
 const bodyParser = require('body-parser');
 
+const pets = require('./routes/pets.js');
+
 app.disable('x-powered-by');
 
 app.use(auth.connect(basic));
 
 app.use(bodyParser.json());
 
-app.get('/pets', (req, res, next) => {
-  fs.readFile(dataPath, 'utf8', (err, json) => {
-    if (err) {
-      return next(err);
-    }
-
-    const data = JSON.parse(json);
-
-    res.send(data);
-  });
-});
-
-app.post('/pets', (req, res, next) => {
-  fs.readFile(dataPath, 'utf8', (readErr, json) => {
-    if (readErr) {
-      return next(readErr);
-    }
-
-    const dataArray = JSON.parse(json);
-    const { name, age, kind } = req.body;
-
-    if (name && age && kind) {
-      const newPet = { name, age: parseInt(age), kind }
-      dataArray.push(newPet);
-
-      fs.writeFile(dataPath, JSON.stringify(dataArray), (writeErr) => {
-        if (writeErr) {
-          return next(writeErr);
-        }
-
-        res.send(newPet);
-      });
-    }
-    else {
-      res.sendStatus(400);
-    }
-  });
-});
-
-app.get('/pets/:id', (req, res, next) => {
-  fs.readFile(dataPath, 'utf8', (err, json) => {
-    if (err) {
-      return next(err);
-    }
-
-    const dataArray = JSON.parse(json);
-    const index = req.params.id;
-
-    if (dataArray[index]) {
-      res.send(dataArray[index]);
-    }
-    else {
-      next();
-    }
-  });
-});
-
-app.patch('/pets/:id', (req, res, next) => {
-  fs.readFile(dataPath, 'utf8', (readErr, json) => {
-    if (readErr) {
-      next(readErr);
-    }
-
-    const dataArray = JSON.parse(json);
-    const index = req.params.id;
-
-    if (dataArray[index]) {
-      const { name, age, kind } = req.body;
-
-      if (name || age || kind) {
-        const pet = {};
-        pet.name = name || dataArray[index].name;
-        pet.age = parseInt(age || dataArray[index].age);
-        pet.kind = kind || dataArray[index].kind;
-
-        dataArray[index] = pet;
-        const newJSON = JSON.stringify(dataArray);
-
-        fs.writeFile(dataPath, newJSON, (writeErr) => {
-          if (writeErr) {
-            next(writeErr);
-          }
-
-          res.send(pet);
-        });
-      }
-      else {
-        res.sendStatus(400);
-      }
-    }
-    else {
-      next();
-    }
-  });
-});
-
-app.delete('/pets/:id', (req, res, next) => {
-  fs.readFile(dataPath, 'utf8', (readErr, json) => {
-    if (readErr) {
-      next(readErr);
-    }
-
-    const dataArray = JSON.parse(json);
-    const index = req.params.id;
-
-    if (dataArray[index]) {
-      const pet = dataArray.splice(index, 1)[0];
-      const newJSON = JSON.stringify(dataArray);
-
-      fs.writeFile(dataPath, newJSON, (writeErr) => {
-        if (writeErr) {
-          next(writeErr);
-        }
-
-        res.send(pet);
-      });
-    }
-    else {
-      next();
-    }
-  });
-});
+app.use(pets(dataPath))
 
 app.use((err, req, res, _next) => {
   console.error(err.stack);
