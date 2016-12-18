@@ -5,7 +5,7 @@ const app = express();
 
 const path = require('path');
 
-const dataPath = path.join(__dirname, 'pets.json');
+// const dataPath = path.join(__dirname, 'pets.json');
 const pwPath = path.join(__dirname, 'user.htpasswd');
 
 const auth = require('http-auth');
@@ -25,7 +25,8 @@ app.use(auth.connect(basic));
 
 app.use(bodyParser.json());
 
-app.use(pets(dataPath));
+// app.use(pets(dataPath)); /* see note in routes/pets.js */
+app.use(pets);
 
 app.use((err, req, res, _next) => {
   console.error(err.stack);
