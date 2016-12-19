@@ -25,11 +25,13 @@ app.use(auth.connect(basic));
 
 app.use(bodyParser.json());
 
-app.use((_req, res, next) => {
-  res.set({
-    'Access-Control-Allow-Origin': 'http://experimental.brianjlee.net',
-    'Access-Control-Allow-Credentials': 'true'
-  });
+app.use((req, res, next) => {
+  if (req.url === 'http://experimental.brianjlee.net') {
+    res.set({
+      'Access-Control-Allow-Origin': 'http://experimental.brianjlee.net',
+      'Access-Control-Allow-Credentials': 'true'
+    });
+  }
   next();
 })
 
