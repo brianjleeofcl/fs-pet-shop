@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 app.use((req, res, next) => {
   if (req.hostname === 'http://experimental.brianjlee.net') {
     res.set({
-      'Access-Control-Allow-Origin': 'http://experimental.brianjlee.net',
+      'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': 'true'
     });
   }
