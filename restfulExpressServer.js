@@ -24,6 +24,7 @@ app.disable('x-powered-by');
 
 app.use(morgan('dev'));
 
+// preflight response for experimental.brianjlee.net/petshop-client
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     res.set({
@@ -48,18 +49,7 @@ morgan.token('body', (req) => {
 });
 app.use(morgan(':body'));
 
-// app.options((req, res) => {
-//   res.set({
-//     'Access-Control-Allow-Origin': 'http://experimental.brianjlee.net',
-//     'Access-Control-Allow-Credentials': 'true',
-//     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-//     'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
-//     'Access-Control-Max-Age': 600
-//   });
-//   console.log('Hi');
-//   return res.send();
-// })
-
+// CORS middleware for experimental.brianjlee.net/petshop-client
 app.use((req, res, next) => {
   if (req.get('Origin') === 'http://experimental.brianjlee.net') {
     res.set({
