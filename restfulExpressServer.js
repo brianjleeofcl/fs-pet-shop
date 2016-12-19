@@ -26,7 +26,7 @@ app.use(auth.connect(basic));
 app.use(bodyParser.json());
 
 app.use((_req, res, next) => {
-  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Origin', 'http://experimental.brianjlee.net');
   next();
 })
 
