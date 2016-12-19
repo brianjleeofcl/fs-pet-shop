@@ -33,13 +33,24 @@ morgan.token('body', (req) => {
 });
 app.use(morgan(':body'));
 
-app.use((req, res, next) => {
+app.options((req, res) => {
   if (req.get('Origin') === 'http://experimental.brianjlee.net') {
     res.set({
       'Access-Control-Allow-Origin': 'http://experimental.brianjlee.net',
       'Access-Control-Allow-Credentials': 'true',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS'
+      'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
+      'Access-Control-Max-Age': 600
+    });
+  }
+  res.send();
+})
+
+app.use((req, res, next) => {
+  if (req.get('Origin') === 'http://experimental.brianjlee.net') {
+    res.set({
+      'Access-Control-Allow-Origin': 'http://experimental.brianjlee.net',
+      'Access-Control-Allow-Credentials': 'true'
     });
   }
   next();
