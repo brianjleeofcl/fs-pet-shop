@@ -29,9 +29,9 @@ app.use(auth.connect(basic));
 app.use(bodyParser.json());
 
 morgan.token('body', (req) => {
-  return req.body;
-})
-app.use(morgan(':body'))
+  return JSON.stringify(req.body);
+});
+app.use(morgan(':body'));
 
 app.use((req, res, next) => {
   if (req.get('Origin') === 'http://experimental.brianjlee.net') {
