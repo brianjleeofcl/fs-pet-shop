@@ -41,7 +41,7 @@ app.use((req, res, next) => {
     });
   }
   next();
-})
+});
 
 // app.use(pets(dataPath)); /* see note in routes/pets.js */
 app.use(pets);
