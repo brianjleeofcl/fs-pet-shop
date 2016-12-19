@@ -16,14 +16,22 @@ const basic = auth.basic({
 });
 
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
 const pets = require('./routes/pets.js');
 
 app.disable('x-powered-by');
 
+app.use(morgan('dev'));
+
 app.use(auth.connect(basic));
 
 app.use(bodyParser.json());
+
+morgan.token('body', (req) => {
+  return req.body;
+})
+app.use(morgan(':body'))
 
 app.use((req, res, next) => {
   if (req.get('Origin') === 'http://experimental.brianjlee.net') {
