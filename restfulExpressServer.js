@@ -26,10 +26,12 @@ app.use(auth.connect(basic));
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-  res.set({
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Credentials': 'true'
-  });
+  if (req.get('Origin') === 'http://experimental.brianjlee.net') {
+    res.set({
+      'Access-Control-Allow-Origin': 'http://experimental.brianjlee.net',
+      'Access-Control-Allow-Credentials': 'true'
+    });
+  }
   next();
 })
 
