@@ -25,6 +25,11 @@ app.use(auth.connect(basic));
 
 app.use(bodyParser.json());
 
+app.use((_req, res, next) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  next();
+})
+
 // app.use(pets(dataPath)); /* see note in routes/pets.js */
 app.use(pets);
 
