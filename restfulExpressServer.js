@@ -34,7 +34,7 @@ app.use((req, res, next) => {
       'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
       'Access-Control-Max-Age': 600
     });
-    console.log('Hi');
+
     return res.send();
   }
   next();
