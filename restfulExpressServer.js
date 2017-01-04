@@ -47,7 +47,9 @@ app.use(bodyParser.json());
 morgan.token('body', (req) => {
   return JSON.stringify(req.body);
 });
-app.use(morgan(':body'));
+app.use(morgan(':body', {
+  skip: (req, res) => Object.keys(req.body).length === 0
+}));
 
 // CORS middleware for experimental.brianjlee.net/petshop-client
 app.use((req, res, next) => {
